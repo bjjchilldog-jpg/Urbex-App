@@ -1,0 +1,8 @@
+[
+    { "name": "Chilldog (Admin)", "rank": "Grubenwehr", "color": "#e74c3c" },
+    { "name": "Max Mustermann", "rank": "Expeditionsleiter", "color": "#2c3e50" },
+    { "name": "Sarah S.", "rank": "Schachtsteiger", "color": "#8e44ad" },
+    { "name": "Urbex Team Alpha", "rank": "Stollen-Kriecher", "color": "#d35400" },
+    { "name": "Lost Places XYZ", "rank": "Urbex Scout", "color": "#2980b9" },
+    { "name": "Tom", "rank": "Basecamp Rookie", "color": "#ecf0f1", "textColor": "#333" }
+]

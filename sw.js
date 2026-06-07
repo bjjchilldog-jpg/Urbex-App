@@ -1,11 +1,12 @@
-const CACHE_NAME = 'urbex-app-v1';
+﻿const CACHE_NAME = 'urbex-app-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
     './css/style.css',
     './js/app.js',
     './manifest.json',
-    './img/logo.png'
+    './img/logo.png',
+    './data/supporters.json'
 ];
 
 self.addEventListener('install', (event) => {
@@ -18,7 +19,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then((response) => {
+        caches.match(event.request, { ignoreSearch: true }).then((response) => {
             return response || fetch(event.request);
         }).catch(() => {
             return caches.match('./index.html');
@@ -39,3 +40,5 @@ self.addEventListener('activate', (event) => {
         })
     );
 });
+
+

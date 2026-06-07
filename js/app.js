@@ -549,25 +549,24 @@
     function loadHallOfFame() {
         updateProfileView();
         
-        var hofData = [
-            { name: "Chilldog (Admin)", rank: "Grubenwehr", color: "#e74c3c" },
-            { name: "Max Mustermann", rank: "Expeditionsleiter", color: "#2c3e50" },
-            { name: "Sarah S.", rank: "Schachtsteiger", color: "#8e44ad" },
-            { name: "Urbex Team Alpha", rank: "Stollen-Kriecher", color: "#d35400" },
-            { name: "Lost Places XYZ", rank: "Urbex Scout", color: "#2980b9" },
-            { name: "Tom", rank: "Basecamp Rookie", color: "#ecf0f1", textColor: "#333" }
-        ];
+        fetch("data/supporters.json?t=" + new Date().getTime())
+            .then(res => res.json())
+            .then(hofData => {
+                var html = "";
+                hofData.forEach(function(p) {
+                    var tColor = p.textColor || "#fff";
+                    html += "<div style='background:#333; margin-bottom:10px; border-radius:6px; display:flex; align-items:center; border-left:5px solid " + p.color + ";'>";
+                    html += "<div style='padding:10px; font-weight:bold; flex:1;'>" + p.name + "</div>";
+                    html += "<div style='background:" + p.color + "; color:" + tColor + "; padding:5px 10px; font-size:11px; font-weight:bold; border-radius:15px; margin-right:10px;'>" + p.rank + "</div>";
+                    html += "</div>";
+                });
+                document.getElementById("hofList").innerHTML = html;
+            })
+            .catch(err => {
+                document.getElementById("hofList").innerHTML = "<p style='color:#e74c3c; font-size:12px;'>Konnte Supporter nicht laden (Offline-Modus).</p>";
+            });
 
-        var html = "";
-        hofData.forEach(function(p) {
-            var tColor = p.textColor || "#fff";
-            html += "<div style='background:#333; margin-bottom:10px; border-radius:6px; display:flex; align-items:center; border-left:5px solid " + p.color + ";'>";
-            html += "<div style='padding:10px; font-weight:bold; flex:1;'>" + p.name + "</div>";
-            html += "<div style='background:" + p.color + "; color:" + tColor + "; padding:5px 10px; font-size:11px; font-weight:bold; border-radius:15px; margin-right:10px;'>" + p.rank + "</div>";
-            html += "</div>";
-        });
-        
-        document.getElementById("hofList").innerHTML = html;
+
     }
 
     // Init Call on load if view-hof is opened
@@ -576,4 +575,5 @@
         originalSwitchView(id);
         if(id === "view-hof") loadHallOfFame();
     };
+
 
