@@ -1,4 +1,4 @@
-﻿// --- INSTRUCTOR MODE VARIABLES & TRIGGERS ---
+// --- INSTRUCTOR MODE VARIABLES & TRIGGERS ---
     let instructorHoldTimer;
     let randomBeeperActive = false;
     let strobeLockActive = false;
@@ -394,7 +394,7 @@
         }
     }
 
-     else if (phase === 1) { instr.innerText = "HALTEN"; instr.style.color = "#f1c40f"; } else if (phase === 2) { instr.innerText = "AUSATMEN"; instr.style.color = "#2980b9"; circle.className = "breathing-circle phase-out"; } else if (phase === 3) { instr.innerText = "HALTEN"; instr.style.color = "#f1c40f"; } phase = (phase + 1) % 4; }
+
 
     // --- ROTLICHT MODUS LOGIK ---
     let isRed = false;
