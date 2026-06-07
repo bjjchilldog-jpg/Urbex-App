@@ -589,9 +589,9 @@
         
         var phases = [
             { text: "EINATMEN", class: "pacer-inhale" },
-            { text: "HALTEN", class: "pacer-hold" },
+            { text: "HALTEN", class: "pacer-hold-full" },
             { text: "AUSATMEN", class: "pacer-exhale" },
-            { text: "HALTEN", class: "pacer-hold" }
+            { text: "HALTEN", class: "pacer-hold-empty" }
         ];
         var step = 0;
         var totalSteps = 0;

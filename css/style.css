@@ -1,4 +1,4 @@
-﻿body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #121212; color: #f0f0f0; margin: 0; padding: 10px; display: flex; justify-content: center; overflow-x: hidden; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #121212; color: #f0f0f0; margin: 0; padding: 10px; display: flex; justify-content: center; overflow-x: hidden; }
         .app-container { width: 100%; max-width: 480px; background-color: #252525; border-radius: 12px; padding: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.8); min-height: 95vh; position: relative; }
         h1, h2, h3 { text-align: center; color: #f39c12; margin-top: 0; letter-spacing: 1px; }
         h1 { border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; font-size: 24px; }
@@ -146,7 +146,14 @@
     background-color: #2980b9;
     box-shadow: 0 0 50px rgba(41, 128, 185, 0.8);
 }
-.pacer-hold {
+.pacer-hold-full {
+    transform: scale(1.5);
+    background-color: #f1c40f;
+    color: #000;
+    box-shadow: 0 0 50px rgba(241, 196, 15, 0.8);
+}
+.pacer-hold-empty {
+    transform: scale(0.8);
     background-color: #f1c40f;
     color: #000;
     box-shadow: 0 0 50px rgba(241, 196, 15, 0.8);
