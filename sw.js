@@ -1,4 +1,4 @@
-const CACHE_NAME = 'urbex-app-v3';
+const CACHE_NAME = 'urbex-app-v4';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
