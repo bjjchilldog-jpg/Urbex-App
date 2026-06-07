@@ -1,4 +1,4 @@
-// --- INSTRUCTOR MODE VARIABLES & TRIGGERS ---
+﻿// --- INSTRUCTOR MODE VARIABLES & TRIGGERS ---
     let instructorHoldTimer;
     let randomBeeperActive = false;
     let strobeLockActive = false;
@@ -359,7 +359,7 @@
         if (totmann === 'nein') fehler.push("TOTMANN: Kontaktperson fehlt.");
         
         if (wetter === 'ja') {
-            fehler.push("WETTER: Starkregen! Gefahr unter Tage.");
+            fehler.push("WETTER: Starkregen! Gefahr unter Tage. Denk an die eingeschlossene Schulklasse! ABSOLUTES NO-GO.");
         }
         
         if (akku === 'nein') {
@@ -375,6 +375,8 @@
         }
         
         if ((hasInfo === 'nein' || stollenTyp === 'nazi' || tiergefahr === 'ja') && maske === 'nein') { fehler.push("ATEMSCHUTZ: FFP3 Maske fehlt."); buyLinks += "<button class='btn btn-buy' onclick='alert(\"Link zur Maske\")'>🛒 Maske ansehen</button> "; }
+        if (stollenTyp === 'nazi') warnungen.push("MUNITION & SPRENGFALLEN: Bei WK2/NS-Anlagen extrem auf Blindgänger und alte Sprengfallen am Boden/Wänden achten!");
+        if (stollenTyp === 'hoehle') warnungen.push("WASSER: Unterirdische Flüsse meiden. Höhlentauchen ist für uns ein absolutes NO-GO!");
         if ((stollenTyp === 'urban' || stollenTyp === 'agrar') && selbstretter === 'nein') warnungen.push("SELBSTRETTER: Empfohlen für diese Anlage.");
         if (stollenTyp === 'bergbau_alt') warnungen.push("STATIK: Vorsicht bei morschen Ausbauten.");
         
@@ -388,13 +390,13 @@
             box.style.backgroundColor = "#27ae60"; 
             box.style.color = "white"; 
             box.style.borderLeftColor = "#1e8449"; 
-            box.innerHTML = "Du bist vorbereitet. Denk an die Eigensicherung!<br><span style='font-size:11px;'>Glück auf!</span>";
+            box.innerHTML = "Du bist vorbereitet. Denk an die Eigensicherung!<br><span style='font-size:11px;'>Glück auf!</span>"; checkGamification("plan");
         }
     }
 
     // --- BREATHING ---
     var isRunning = false; var phaseInterval; var phase = 0;
-    function toggleBreathing() { var circle = document.getElementById('circle'); var instr = document.getElementById('instr'); var btn = document.getElementById('btn-breath'); if (isRunning) { clearInterval(phaseInterval); isRunning = false; btn.innerText = "START"; btn.style.backgroundColor = "#2980b9"; instr.innerText = "BEREIT"; circle.className = "breathing-circle"; phase = 0; } else { isRunning = true; btn.innerText = "STOPP"; btn.style.backgroundColor = "#c0392b"; runPhase(); phaseInterval = setInterval(runPhase, 4000); } }
+    function toggleBreathing() { var circle = document.getElementById('circle'); var instr = document.getElementById('instr'); var btn = document.getElementById('btn-breath'); if (isRunning) { clearInterval(phaseInterval); isRunning = false; btn.innerText = "START"; btn.style.backgroundColor = "#2980b9"; instr.innerText = "BEREIT"; circle.className = "breathing-circle"; phase = 0; checkGamification("breath"); } else { isRunning = true; btn.innerText = "STOPP"; btn.style.backgroundColor = "#c0392b"; runPhase(); phaseInterval = setInterval(runPhase, 4000); } }
     function runPhase() { var circle = document.getElementById('circle'); var instr = document.getElementById('instr'); if (phase === 0) { instr.innerText = "EINATMEN"; instr.style.color = "#27ae60"; circle.className = "breathing-circle phase-in"; } else if (phase === 1) { instr.innerText = "HALTEN"; instr.style.color = "#f1c40f"; } else if (phase === 2) { instr.innerText = "AUSATMEN"; instr.style.color = "#2980b9"; circle.className = "breathing-circle phase-out"; } else if (phase === 3) { instr.innerText = "HALTEN"; instr.style.color = "#f1c40f"; } phase = (phase + 1) % 4; }
 
     // --- ROTLICHT MODUS LOGIK ---
@@ -474,3 +476,104 @@
         reader.readAsText(file);
         event.target.value = ""; 
     }
+
+
+    // --- GAMIFICATION / BADGES ---
+    function checkGamification(action) {
+        var badges = JSON.parse(localStorage.getItem("urbexBadges") || "[]");
+        var changed = false;
+        
+        if (action === "breath" && !badges.includes("Mental Ready")) {
+            badges.push("Mental Ready");
+            changed = true;
+            showBadgeNotification("Mental Ready: Atemübung absolviert!");
+        }
+        if (action === "plan" && !badges.includes("Intel Gathered")) {
+            var box = document.getElementById("ergebnisBox").innerHTML;
+            if (box.includes("Du bist vorbereitet")) {
+                badges.push("Intel Gathered");
+                changed = true;
+                showBadgeNotification("Intel Gathered: Tour sicher geplant!");
+            }
+        }
+        
+        if (changed) {
+            localStorage.setItem("urbexBadges", JSON.stringify(badges));
+            if(typeof loadHallOfFame === "function") loadHallOfFame();
+        }
+    }
+
+    function showBadgeNotification(text) {
+        var notif = document.createElement("div");
+        notif.style.position = "fixed";
+        notif.style.top = "20px";
+        notif.style.left = "50%";
+        notif.style.transform = "translateX(-50%)";
+        notif.style.backgroundColor = "#f39c12";
+        notif.style.color = "#000";
+        notif.style.padding = "10px 20px";
+        notif.style.borderRadius = "20px";
+        notif.style.fontWeight = "bold";
+        notif.style.zIndex = "100000";
+        notif.style.boxShadow = "0 0 15px rgba(243, 156, 18, 0.5)";
+        notif.innerText = "🏆 NEUES BADGE: " + text;
+        document.body.appendChild(notif);
+        if("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
+        setTimeout(function() { notif.remove(); }, 4000);
+    }
+
+
+    // --- HALL OF FAME & PROFILE ---
+    function updateProfileView() {
+        var badges = JSON.parse(localStorage.getItem("urbexBadges") || "[]");
+        var container = document.getElementById("badgeContainer");
+        if(!container) return;
+        
+        if (badges.length === 0) {
+            container.innerHTML = "<p style='font-size:11px; color:#888;'>Noch keine Badges gesammelt. Erfülle Checklisten, um Ränge freizuschalten.</p>";
+            return;
+        }
+
+        var html = "";
+        badges.forEach(function(b) {
+            var color = "#3498db";
+            var icon = "🎖️";
+            if(b === "Mental Ready") { color = "#2ecc71"; icon = "🧘"; }
+            if(b === "Intel Gathered") { color = "#f39c12"; icon = "📋"; }
+
+            html += "<div style='background:" + color + "; color:#fff; padding:5px 10px; border-radius:15px; font-size:12px; font-weight:bold; display:flex; align-items:center; gap:5px;'><span>" + icon + "</span> " + b + "</div>";
+        });
+        container.innerHTML = html;
+    }
+
+    function loadHallOfFame() {
+        updateProfileView();
+        
+        var hofData = [
+            { name: "Chilldog (Admin)", rank: "Grubenwehr", color: "#e74c3c" },
+            { name: "Max Mustermann", rank: "Expeditionsleiter", color: "#2c3e50" },
+            { name: "Sarah S.", rank: "Schachtsteiger", color: "#8e44ad" },
+            { name: "Urbex Team Alpha", rank: "Stollen-Kriecher", color: "#d35400" },
+            { name: "Lost Places XYZ", rank: "Urbex Scout", color: "#2980b9" },
+            { name: "Tom", rank: "Basecamp Rookie", color: "#ecf0f1", textColor: "#333" }
+        ];
+
+        var html = "";
+        hofData.forEach(function(p) {
+            var tColor = p.textColor || "#fff";
+            html += "<div style='background:#333; margin-bottom:10px; border-radius:6px; display:flex; align-items:center; border-left:5px solid " + p.color + ";'>";
+            html += "<div style='padding:10px; font-weight:bold; flex:1;'>" + p.name + "</div>";
+            html += "<div style='background:" + p.color + "; color:" + tColor + "; padding:5px 10px; font-size:11px; font-weight:bold; border-radius:15px; margin-right:10px;'>" + p.rank + "</div>";
+            html += "</div>";
+        });
+        
+        document.getElementById("hofList").innerHTML = html;
+    }
+
+    // Init Call on load if view-hof is opened
+    var originalSwitchView = switchView;
+    switchView = function(id) {
+        originalSwitchView(id);
+        if(id === "view-hof") loadHallOfFame();
+    };
+

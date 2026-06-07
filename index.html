@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -48,7 +48,7 @@
 
     <div class="app-header">
         <button class="red-toggle" onclick="toggleRedMode()">🔴 RED MODE</button>
-        <img class="retina-logo" src="img/logo.png" alt="Gl�ck Auf Media" onmousedown="startInstructorHold(event)" onmouseup="endInstructorHold(event)" onmouseleave="endInstructorHold(event)" ontouchstart="startInstructorHold(event)" ontouchend="endInstructorHold(event)">
+        <img class="retina-logo" src="img/logo.png" alt="Gl�ck Auf Media" onmousedown="startInstructorHold(event)" onmouseup="endInstructorHold(event)" onmouseleave="endInstructorHold(event)" ontouchstart="startInstructorHold(event)" ontouchend="endInstructorHold(event)">
         <div style="font-size:10px; color:#888; margin-top:10px; line-height:1.3;">
             ⚠️ Kein Ersatz für Ausbildung. Nutzung auf eigene Gefahr.
         </div>
@@ -61,6 +61,7 @@
             <button class="btn btn-blue" onclick="switchView('view-timer')"><span class="icon">⏱️</span><span>3. TOUR-TIMER</span></button>
             <button class="btn btn-green" onclick="switchView('view-exfil')"><span class="icon">🧼</span><span>4. EXIT & REINIGUNG</span></button>
             <button class="btn btn-dark" onclick="switchView('view-aar')"><span class="icon">📓</span><span>5. TOUR-LOGBUCH</span></button>
+            <button class="btn btn-dark" onclick="switchView('view-hof')"><span class="icon">🏆</span><span>HALL OF FAME & PROFIL</span></button>
             <button class="btn btn-dark" onclick="switchView('view-tasks')"><span class="icon">📝</span><span>6. TO-DO & NOTIZEN</span></button>
             <button class="btn btn-dark" onclick="switchView('view-comms')"><span class="icon">📻</span><span>7. OFFLINE-SIGNALE</span></button>
             <button class="btn btn-blue menu-full" onclick="switchView('view-breath')"><span class="icon">🧘</span><span>8. MENTALER FOKUS</span></button>
@@ -100,7 +101,7 @@
         <p style="font-size:12px; color:#aaa;">Medizinische Daten vor dem Einstieg an den Totmann und die Buddys teilen. Löst das Problem der Handysperre im Notfall!</p>
         
         <label>Team-Größe (Personen):</label>
-        <input type="number" id="paxCount" value="2" min="1" max="20">
+        <div class="step step-red" style="margin-bottom: 15px; font-size: 14px;"><strong>🛑 EHERNE REGEL:</strong> KEINER GEHT ALLEIN!</div>`n        <input type="number" id="paxCount" value="2" min="2" max="20" onchange="if(this.value < 2) this.value = 2;">
         
         <label>Medizinische Infos (Team):</label>
         <textarea id="medInfo" style="min-height: 120px;" placeholder="Tippe auf Vorlage laden..."></textarea>
@@ -239,4 +240,6 @@ if ("serviceWorker" in navigator) {
 </script>
 </body>
 </html>
+
+
 
