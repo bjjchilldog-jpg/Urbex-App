@@ -1,0 +1,21 @@
+{
+    "name": "Urbex Basecamp App",
+    "short_name": "UrbexApp",
+    "description": "Urbex Companion App mit Offline-Support und Notfall-Protokollen",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#121212",
+    "theme_color": "#121212",
+    "icons": [
+        {
+            "src": "img/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "img/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

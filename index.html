@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urbex Basecamp App v15.7 PRO</title>`n    <link rel="manifest" href="manifest.json">`n    <link rel="apple-touch-icon" href="img/logo.png">
+    <meta name="theme-color" content="#121212">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="strobeScreen" onclick="handleStrobeClick(event)">
+    <div id="strobeMathUI" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:#111; padding:20px; border-radius:12px; border:3px solid #c0392b; z-index:10000; text-align:center; box-shadow: 0 0 50px rgba(0,0,0,0.9); min-width: 250px;">
+        <h3 style="color:#fff; margin-top:0; font-size:24px;">SYSTEM LOCK</h3>
+        <p style="color:#aaa; font-size:12px; margin-top:-10px;">Löse die Aufgabe zum Entsperren!</p>
+        <div id="strobeMathQuestion" style="font-size:36px; color:#f39c12; margin-bottom:15px; font-weight:bold;"></div>
+        <input type="number" id="strobeMathAnswer" style="font-size:32px; text-align:center; padding:15px; width:120px; font-weight:bold; background:#000; color:#fff;" inputmode="numeric">
+        <button class="btn btn-red" style="margin-top:20px; padding: 20px; font-size:18px;" onclick="checkStrobeMath(event)">ENTSPERREN</button>
+    </div>
+</div>
+
+<div id="fakeCrashScreen">
+    <div style="color:#c0392b; font-size:80px; margin-bottom:20px;">🔋</div>
+    <div style="color:#fff; font-family:monospace; font-size:24px; letter-spacing:2px;">SYSTEM FAILURE</div>
+    <div style="position:absolute; top:0; right:0; width:120px; height:120px; opacity:0; z-index: 10;" onclick="unlockFakeCrash(event)"></div>
+</div>
+
+<div id="instructorMenu">
+    <h2 style="color:#c0392b; font-size:28px; border-bottom:2px solid #c0392b; padding-bottom:10px;">⚠️ INSTRUCTOR MODE</h2>
+    <p style="color:#ccc; font-size:13px; text-align:center;">Verstecktes Ausbilder-Menü für Stresstests.</p>
+    
+    <button class="btn btn-dark" onclick="toggleRandomBeeper()" id="btn-rand-beep" style="border-color:#f39c12; color:#f39c12;">DRILL: RANDOM BEEPER (AUS)</button>
+    <p style="color:#888; font-size:11px; text-align:center; margin-top:-5px;">Tour-Timer vibriert zufällig alle 30-90 Sek statt 20 Min.</p>
+
+    <button class="btn btn-dark" onclick="toggleStrobeLock()" id="btn-strobe-lock" style="border-color:#3498db; color:#3498db; margin-top:25px;">DRILL: STROBE MATH LOCK (AUS)</button>
+    <p style="color:#888; font-size:11px; text-align:center; margin-top:-5px;">Stroboskoplicht erfordert Matheaufgabe zum Beenden.</p>
+
+    <h3 style="color:#c0392b; margin-top:40px; border-top:1px solid #444; padding-top:20px;">BUDDY-RELIANCE DRILL</h3>
+    <button class="btn btn-red" style="padding: 20px 10px; font-size:16px;" onclick="startFakeCrashCountdown()">CRASH IN 3 MINUTEN SCHARFMACHEN</button>
+    <button class="btn btn-dark" style="padding: 20px 10px; font-size:16px; border-color:#c0392b; color:#c0392b;" onclick="triggerFakeCrash()">CRASH SOFORT AUSLÖSEN</button>
+    <p style="color:#888; font-size:11px; text-align:center;">Tippe beim schwarzen Crash-Screen 3x schnell in die obere rechte Ecke, um ihn wieder zu entsperren!</p>
+
+    <button class="btn btn-dark" style="margin-top:50px; background:#111;" onclick="document.getElementById('instructorMenu').style.display='none'">SCHLIESSEN</button>
+</div>
+
+<div class="app-container">
+
+    <div class="app-header">
+        <button class="red-toggle" onclick="toggleRedMode()">🔴 RED MODE</button>
+        <img class="retina-logo" src="img/logo.png" alt="Gl�ck Auf Media" onmousedown="startInstructorHold(event)" onmouseup="endInstructorHold(event)" onmouseleave="endInstructorHold(event)" ontouchstart="startInstructorHold(event)" ontouchend="endInstructorHold(event)">
+        <div style="font-size:10px; color:#888; margin-top:10px; line-height:1.3;">
+            ⚠️ Kein Ersatz für Ausbildung. Nutzung auf eigene Gefahr.
+        </div>
+    </div>
+
+    <div id="view-menu" class="view active">
+        <div class="menu-grid">
+            <button class="btn btn-orange menu-full" onclick="switchView('view-intel')"><span class="icon">📋</span><span>1. PLANUNG & RISIKO</span></button>
+            <button class="btn btn-blue" onclick="switchView('view-manifest')"><span class="icon">👥</span><span>2. TEAM-INFO (I.C.E.)</span></button>
+            <button class="btn btn-blue" onclick="switchView('view-timer')"><span class="icon">⏱️</span><span>3. TOUR-TIMER</span></button>
+            <button class="btn btn-green" onclick="switchView('view-exfil')"><span class="icon">🧼</span><span>4. EXIT & REINIGUNG</span></button>
+            <button class="btn btn-dark" onclick="switchView('view-aar')"><span class="icon">📓</span><span>5. TOUR-LOGBUCH</span></button>
+            <button class="btn btn-dark" onclick="switchView('view-tasks')"><span class="icon">📝</span><span>6. TO-DO & NOTIZEN</span></button>
+            <button class="btn btn-dark" onclick="switchView('view-comms')"><span class="icon">📻</span><span>7. OFFLINE-SIGNALE</span></button>
+            <button class="btn btn-blue menu-full" onclick="switchView('view-breath')"><span class="icon">🧘</span><span>8. MENTALER FOKUS</span></button>
+            <button class="btn btn-red menu-full" onclick="switchView('view-trauma')"><span class="icon">🔴</span><span>NOTFALL / ERSTE HILFE</span></button>
+        </div>
+    </div>
+
+    <div id="view-intel" class="view">
+        <h2>TOUR-PLANUNG</h2>
+        <button class="btn btn-dark" onclick="getGPS()"><span class="icon">📍</span><span>STANDORT ERMITTELN</span></button>
+        <p id="gpsDisplay" style="font-size: 11px; text-align: center; color: #27ae60; font-weight: bold; margin-top: -5px;"></p>
+        
+        <label>Zeitraum (Artenschutz):</label><select id="monat" onchange="checkGoNoGo()"><option value="sommer">April - September</option><option value="winter">Oktober - März (Winterruhe)</option></select>
+        <label>Wetter-Check (48h Regen?):</label><select id="wetter" onchange="checkGoNoGo()"><option value="nein">Trocken / Stabil</option><option value="ja">Ja (Sturzflutgefahr)</option></select>
+        <label>Aufklärung:</label><select id="hasInfo" onchange="toggleIntelSections()"><option value="nein">Blind-Drop (Kein Vorwissen)</option><option value="ja">Info-Drop (Wissen vorhanden)</option></select>
+
+        <div id="intelSections" style="display:none;">
+            <label>Objekt-Typ:</label><select id="stollenTyp" onchange="checkGoNoGo()"><option value="standard">Standard</option><option value="nazi">NS-Anlage (Asbest/Gase)</option><option value="agrar">Agrar / Silo / Gülle</option><option value="bergbau_alt">Altbergbau</option><option value="hoehle">Naturhöhle</option><option value="urban">Urban / Kanal</option></select>
+            <label>Biologie (Kot/Viren?):</label><select id="tiergefahr" onchange="checkGoNoGo()"><option value="nein">Nein</option><option value="ja">Ja</option></select>
+        </div>
+
+        <h3>AUSRÜSTUNG (GEAR)</h3>
+        <label>Erste Hilfe (IFAK / TQ):</label><select id="ifak" onchange="checkGoNoGo()"><option value="nein">Fehlt</option><option value="ja" selected>Dabei</option></select>
+        <label>Licht-Redundanz (2+):</label><select id="licht" onchange="checkGoNoGo()"><option value="nein">Fehlt</option><option value="ja" selected>Check</option></select>
+        <label>Totmann-Kontakt:</label><select id="totmann" onchange="checkGoNoGo()"><option value="nein">Fehlt</option><option value="ja" selected>Check</option></select>
+        <label>Atemschutz (FFP3):</label><select id="maske" onchange="checkGoNoGo()"><option value="nein">Fehlt</option><option value="ja" selected>Check</option></select>
+        <label>Gaswarner (Multigas):</label><select id="gaswarner" onchange="checkGoNoGo()"><option value="nein">Fehlt</option><option value="ja" selected>Check</option></select>
+        <label>Selbstretter (O2):</label><select id="selbstretter" onchange="checkGoNoGo()"><option value="nein">Fehlt</option><option value="ja">Dabei</option></select>
+        <label>Akku-Check (1/3 Regel):</label><select id="akku" onchange="checkGoNoGo()"><option value="nein">Zu niedrig / Keine Reserve</option><option value="ja" selected>Ausreichend / Powerbank dabei</option></select>
+
+        <div id="ergebnisBox"></div>
+        <button class="btn btn-dark" style="margin-top:25px;" onclick="switchView('view-menu')">ZURÜCK</button>
+    </div>
+
+    <div id="view-manifest" class="view">
+        <h2>TEAM-INFO (I.C.E.)</h2>
+        <p style="font-size:12px; color:#aaa;">Medizinische Daten vor dem Einstieg an den Totmann und die Buddys teilen. Löst das Problem der Handysperre im Notfall!</p>
+        
+        <label>Team-Größe (Personen):</label>
+        <input type="number" id="paxCount" value="2" min="1" max="20">
+        
+        <label>Medizinische Infos (Team):</label>
+        <textarea id="medInfo" style="min-height: 120px;" placeholder="Tippe auf Vorlage laden..."></textarea>
+        <button class="btn btn-dark" style="padding:10px; font-size:11px;" onclick="loadManifestTemplate()"><span class="icon">📋</span><span>VORLAGE LADEN</span></button>
+        
+        <button class="btn btn-green" style="margin-top:20px;" onclick="shareManifest()"><span class="icon">📲</span><span>VIA WHATSAPP TEILEN</span></button>
+        <button class="btn btn-dark" onclick="switchView('view-menu')">ZURÜCK</button>
+    </div>
+
+    <div id="view-timer" class="view">
+        <h2>TOUR-TIMER</h2>
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;"><label>Stunden</label><input type="number" id="t-hours" value="2" min="0"></div>
+            <div style="flex:1;"><label>Minuten</label><input type="number" id="t-mins" value="30" min="0" max="59"></div>
+        </div>
+        
+        <div class="checkbox-container">
+            <input type="checkbox" id="awarenessBeeper" checked>
+            <label for="awarenessBeeper" style="margin:0; font-size:12px; text-transform:none; color:#ccc;"><b>Awareness Beeper</b> (Vibriert alle 20 Min als Erinnerung für Luft, Orientierung & Akku)</label>
+        </div>
+
+        <div class="timer-display" id="timerDisplay">02:30:00</div>
+        
+        <button class="btn btn-green" onclick="sendTotmannBriefing()"><span class="icon">📲</span><span>TOTMANN-INFO (WHATSAPP)</span></button>
+        <button class="btn btn-orange" id="btnTimerStart" style="margin-top:20px;" onclick="startTimer()">TOUR STARTEN</button>
+        <button class="btn btn-red" id="btnTimerStop" style="display:none; margin-top:20px;" onclick="stopTimer()">TOUR BEENDET / SAFE</button>
+        <button class="btn btn-dark" onclick="switchView('view-menu')">ZURÜCK</button>
+    </div>
+
+    <div id="view-comms" class="view">
+        <h2>OFFLINE-SIGNALE</h2>
+        <p style="font-size:12px; color:#aaa;">Wenn Funk ausfällt: Standardisierte Signale der Community.</p>
+        
+        <h3>KLOPFZEICHEN (Rohre / Fels)</h3>
+        <div class="step"><strong>1x Klopfen:</strong> OK / Verstanden / Bin hier</div>
+        <div class="step"><strong>2x Klopfen:</strong> HALT / Stop / Nicht weitergehen</div>
+        <div class="step"><strong>3x Klopfen:</strong> SOS / Sofort sammeln / Gefahr</div>
+        <div class="step"><strong>4x Klopfen:</strong> Rückzug / Exit einleiten</div>
+
+        <h3>KREIDEMARKIERUNGEN (Boden / Wand)</h3>
+        <div class="step"><strong>↑ (Pfeil):</strong> Zeigt IMMER in Richtung Ausgang!</div>
+        <div class="step"><strong>X (Kreuz):</strong> Sackgasse / Gefahrenbereich</div>
+        <div class="step"><strong>O (Kreis):</strong> Schacht / Loch im Boden voraus</div>
+
+        <button class="btn btn-dark" onclick="switchView('view-menu')">ZURÜCK</button>
+    </div>
+
+    <div id="view-tasks" class="view">
+        <h2>TO-DO & NOTIZEN</h2>
+        <label>Maßnahme / To-Do:</label>
+        <input type="text" id="taskText" placeholder="z.B. Ausrüstung reinigen, Akkus laden">
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;"><label>Frist bis:</label><input type="date" id="taskDate"></div>
+            <div style="flex:1;"><label>Prio:</label><select id="taskPrio"><option value="HOCH">Hoch</option><option value="MITTEL" selected>Mittel</option><option value="NIEDRIG">Niedrig</option></select></div>
+        </div>
+        <button class="btn btn-blue" onclick="addTask()">NOTIZ HINZUFÜGEN</button>
+        <h3>AKTUELLE TO-DOS</h3>
+        <div id="taskListContainer"></div>
+        <button class="btn btn-dark" onclick="switchView('view-menu')">ZURÜCK</button>
+    </div>
+
+    <div id="view-exfil" class="view">
+        <h2>EXIT & REINIGUNG</h2>
+        <div class="step"><strong>1. GROBREINIGUNG</strong>Staub/Schlamm abwischen.</div>
+        <div class="step"><strong>2. SCHUHE</strong>Schuhe in Transportbox. Nicht im Auto lagern.</div>
+        <div class="step"><strong>3. AUSRÜSTUNG</strong>Gaswarner/Lampen abwischen. Hände waschen.</div>
+        <div class="step"><strong>4. CHECK-OUT</strong>Totmann & Timer stoppen!</div>
+        <button class="btn btn-dark" onclick="switchView('view-menu')">ZURÜCK</button>
+    </div>
+
+    <div id="view-aar" class="view">
+        <h2>TOUR-LOGBUCH</h2>
+        <label>Neue Notiz (Besonderheiten/Fehler):</label>
+        <textarea id="aarInput" placeholder="Was lief gut? Gab es Probleme?"></textarea>
+        <input type="file" id="aarPhotoInput" accept="image/*" capture="environment" style="display:none;" onchange="previewPhoto(event)">
+        <button class="btn btn-dark" style="margin-top:0;" onclick="document.getElementById('aarPhotoInput').click()"><span class="icon">📸</span><span>FOTO HINZUFÜGEN</span></button>
+        <img id="aarPhotoPreview" style="display:none; width:100%; border-radius:6px; margin-bottom:10px; border:1px solid #555;">
+        <button class="btn btn-green" onclick="saveAAR()">LOG SPEICHERN</button>
+        
+        <h3>AKTE</h3>
+        <div id="aarList"></div>
+
+        <h3 style="margin-top: 30px; border-top: 1px solid #333; padding-top: 15px;">DATENSICHERUNG</h3>
+        <p style="font-size:11px; color:#888; text-align:center;">Sichert Logbuch & To-Dos als Datei auf dem Handy, um sie vor Cache-Löschungen zu schützen.</p>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-blue" style="padding: 20px 10px; font-size: 14px;" onclick="exportData()"><span class="icon">💾</span><span>EXPORT</span></button>
+            <button class="btn btn-orange" style="padding: 20px 10px; font-size: 14px;" onclick="document.getElementById('importInput').click()"><span class="icon">📂</span><span>IMPORT</span></button>
+            <input type="file" id="importInput" accept=".json" style="display:none;" onchange="importData(event)">
+        </div>
+
+        <button class="btn btn-dark" onclick="switchView('view-menu')">ZURÜCK</button>
+    </div>
+
+    <div id="view-breath" class="view">
+        <h2>MENTALER FOKUS</h2>
+        <div class="step step-blue" style="margin-bottom: 20px;">
+            <strong>🔥 PANIK-BREAKER</strong>
+            Bei akuter Platzangst/Unruhe:<br> <b>Scharfes Bonbon oder Kaugummi in den Mund!</b><br><br>
+            <i style="font-size: 11px;">Kauen signalisiert "Nahrungsaufnahme" (Parasympathikus) und blockiert biologisch den Fluchtinstinkt.</i>
+        </div>
+        <div class="breath-container"><div class="breathing-circle" id="circle"></div><div id="instr">BEREIT</div></div>
+        <button class="btn btn-blue" id="btn-breath" onclick="toggleBreathing()">ATEM-ÜBUNG STARTEN</button>
+        <button class="btn btn-dark" onclick="switchView('view-menu')">ZURÜCK</button>
+    </div>
+
+    <div id="view-trauma" class="view">
+        <h2>NOTFALL-PROTOKOLL</h2>
+        <div class="menu-grid">
+            <button class="btn btn-orange" onclick="toggleStrobe()"><span class="icon">🔦</span><span>SOS LICHT</span></button>
+            <button class="btn btn-red" onclick="toggleBeacon()"><span class="icon">🔊</span><span>SOS TON</span></button>
+        </div>
+        <div class="step step-red"><strong>🛑 1. EIGENSICHERUNG</strong>Gefahr gebannt? Sonst sofortiger Rückzug.</div>
+        <div class="step step-red">
+            <strong>🩸 2. STARKE BLUTUNG</strong><br>
+            Tourniquet anlegen.<br>
+            <span style="font-size:11px;">Nur anwenden wenn trainiert! Sonst: Druckverband + Hilfe rufen!</span>
+        </div>
+        <div class="step step-red"><strong>🥶 3. WÄRMEERHALT</strong>Bodenkälte blockieren. Rettungsdecke nutzen.</div>
+        <div class="step step-red"><strong>📍 4. HILFE / GPS</strong>Koordinaten aus dem Planungs-Check senden. Ruhe bewahren.</div>
+        <button class="btn btn-dark" onclick="switchView('view-menu')">ZURÜCK</button>
+    </div>
+</div>
+
+<script src="js/app.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").then(registration => {
+            console.log("ServiceWorker registration successful");
+        }).catch(err => {
+            console.log("ServiceWorker registration failed: ", err);
+        });
+    });
+}
+</script>
+</body>
+</html>
+
