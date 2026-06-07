@@ -1,9 +1,9 @@
-const CACHE_NAME = 'urbex-app-v5';
+const CACHE_NAME = 'urbex-app-v6';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
-    './css/style.css',
-    './js/app.js',
+    './css/style.css?v=6',
+    './js/app.js?v=6',
     './manifest.json',
     './img/logo.png',
     './img/app-icon.png',
