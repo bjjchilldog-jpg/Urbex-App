@@ -1,4 +1,4 @@
-body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #121212; color: #f0f0f0; margin: 0; padding: 10px; display: flex; justify-content: center; overflow-x: hidden; }
+﻿body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #121212; color: #f0f0f0; margin: 0; padding: 10px; display: flex; justify-content: center; overflow-x: hidden; }
         .app-container { width: 100%; max-width: 480px; background-color: #252525; border-radius: 12px; padding: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.8); min-height: 95vh; position: relative; }
         h1, h2, h3 { text-align: center; color: #f39c12; margin-top: 0; letter-spacing: 1px; }
         h1 { border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; font-size: 24px; }
@@ -122,3 +122,46 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #121212; c
         /* --- INSTRUCTOR UI STYLES --- */
         #instructorMenu { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:100000; padding:20px; overflow-y:auto; box-sizing:border-box; }
         #fakeCrashScreen { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999999; flex-direction:column; justify-content:center; align-items:center; }
+
+/* --- BREATHING PACER ANIMATIONS --- */
+.breathing-pacer {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #34495e;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 30px auto;
+    transition: all 4s linear;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    text-align: center;
+    line-height: 1.3;
+}
+.pacer-inhale {
+    transform: scale(1.5);
+    background-color: #2980b9;
+    box-shadow: 0 0 50px rgba(41, 128, 185, 0.8);
+}
+.pacer-hold {
+    background-color: #f1c40f;
+    color: #000;
+    box-shadow: 0 0 50px rgba(241, 196, 15, 0.8);
+}
+.pacer-exhale {
+    transform: scale(0.8);
+    background-color: #27ae60;
+    box-shadow: 0 0 30px rgba(39, 174, 96, 0.5);
+}
+.breath-alert {
+    background-color: #e74c3c !important;
+    animation: flashRed 1s infinite alternate;
+}
+@keyframes flashRed {
+    from { box-shadow: 0 0 20px #e74c3c; }
+    to { box-shadow: 0 0 60px #e74c3c; transform: scale(1.05); }
+}
+

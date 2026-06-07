@@ -394,10 +394,7 @@
         }
     }
 
-    // --- BREATHING ---
-    var isRunning = false; var phaseInterval; var phase = 0;
-    function toggleBreathing() { var circle = document.getElementById('circle'); var instr = document.getElementById('instr'); var btn = document.getElementById('btn-breath'); if (isRunning) { clearInterval(phaseInterval); isRunning = false; btn.innerText = "START"; btn.style.backgroundColor = "#2980b9"; instr.innerText = "BEREIT"; circle.className = "breathing-circle"; phase = 0; checkGamification("breath"); } else { isRunning = true; btn.innerText = "STOPP"; btn.style.backgroundColor = "#c0392b"; runPhase(); phaseInterval = setInterval(runPhase, 4000); } }
-    function runPhase() { var circle = document.getElementById('circle'); var instr = document.getElementById('instr'); if (phase === 0) { instr.innerText = "EINATMEN"; instr.style.color = "#27ae60"; circle.className = "breathing-circle phase-in"; } else if (phase === 1) { instr.innerText = "HALTEN"; instr.style.color = "#f1c40f"; } else if (phase === 2) { instr.innerText = "AUSATMEN"; instr.style.color = "#2980b9"; circle.className = "breathing-circle phase-out"; } else if (phase === 3) { instr.innerText = "HALTEN"; instr.style.color = "#f1c40f"; } phase = (phase + 1) % 4; }
+     else if (phase === 1) { instr.innerText = "HALTEN"; instr.style.color = "#f1c40f"; } else if (phase === 2) { instr.innerText = "AUSATMEN"; instr.style.color = "#2980b9"; circle.className = "breathing-circle phase-out"; } else if (phase === 3) { instr.innerText = "HALTEN"; instr.style.color = "#f1c40f"; } phase = (phase + 1) % 4; }
 
     // --- ROTLICHT MODUS LOGIK ---
     let isRed = false;
@@ -576,4 +573,103 @@
         if(id === "view-hof") loadHallOfFame();
     };
 
+
+
+    // --- TAKTISCHE ATMUNG (Box Breathing) ---
+    var activeBreathInterval;
+    function runBoxBreathing() {
+        var btnStart = document.getElementById("btnStartBox");
+        var btnAbort = document.getElementById("btnAbortBox");
+        var circle = document.getElementById("pacerCircle_box");
+        var uiContainer = document.getElementById("breathUI_box");
+        
+        btnStart.style.display = "none";
+        btnAbort.style.display = "block";
+        circle.style.display = "flex";
+        
+        var phases = [
+            { text: "EINATMEN", class: "pacer-inhale" },
+            { text: "HALTEN", class: "pacer-hold" },
+            { text: "AUSATMEN", class: "pacer-exhale" },
+            { text: "HALTEN", class: "pacer-hold" }
+        ];
+        var step = 0;
+        var totalSteps = 0;
+        var maxSteps = 30; // 30 * 4s = 120s (2 minutes)
+        
+        function nextPhase() {
+            if (totalSteps >= maxSteps) {
+                clearInterval(activeBreathInterval);
+                circle.style.display = "none";
+                btnStart.style.display = "block";
+                btnAbort.style.display = "none";
+                btnStart.innerText = "✅ 2 MINUTEN GESCHAFFT (ERNEUT STARTEN)";
+                btnStart.style.backgroundColor = "#27ae60";
+                checkGamification("breath"); // Trigger Badge
+                return;
+            }
+            
+            circle.className = "breathing-pacer " + phases[step].class;
+            circle.innerText = phases[step].text + "\n(" + (maxSteps - totalSteps) + " verbleibend)";
+            
+            step = (step + 1) % 4;
+            totalSteps++;
+        }
+        
+        nextPhase();
+        activeBreathInterval = setInterval(nextPhase, 4000);
+    }
+    
+    function abortBoxBreathing() {
+        clearInterval(activeBreathInterval);
+        document.getElementById("pacerCircle_box").style.display = "none";
+        document.getElementById("btnStartBox").style.display = "block";
+        document.getElementById("btnStartBox").innerText = "▶️ NEUSTART";
+        document.getElementById("btnStartBox").style.backgroundColor = "#2980b9";
+        document.getElementById("btnAbortBox").style.display = "none";
+    }
+
+    // --- SQUEEZE TRAINING (Empty Lung Hold) ---
+    var squeezeInterval;
+    var squeezeSeconds = 0;
+    
+    function runSqueezeTraining() {
+        var btnStart = document.getElementById("btnStartSqueeze");
+        var btnStop = document.getElementById("btnStopSqueeze");
+        var uiContainer = document.getElementById("breathUI_squeeze");
+        
+        btnStart.style.display = "none";
+        btnStop.style.display = "block";
+        squeezeSeconds = 0;
+        
+        uiContainer.innerHTML = "<div style='text-align:center; margin-top:30px;'><h1 style='font-size:60px; color:#fff; margin:0;' id='sqTimer'>0s</h1><p style='color:#f1c40f;'>LUNGE LEER - NICHT ATMEN!</p></div>";
+        var timerDisplay = document.getElementById("sqTimer");
+        
+        squeezeInterval = setInterval(function() {
+            squeezeSeconds++;
+            timerDisplay.innerText = squeezeSeconds + "s";
+            
+            // Visual stress feedback
+            if (squeezeSeconds > 15) timerDisplay.style.color = "#e67e22";
+            if (squeezeSeconds > 30) timerDisplay.style.color = "#e74c3c";
+        }, 1000);
+    }
+    
+    function stopSqueezeTraining() {
+        clearInterval(squeezeInterval);
+        var btnStart = document.getElementById("btnStartSqueeze");
+        var btnStop = document.getElementById("btnStopSqueeze");
+        var uiContainer = document.getElementById("breathUI_squeeze");
+        
+        btnStop.style.display = "none";
+        btnStart.style.display = "block";
+        btnStart.innerText = "🔄 NOCHMAL VERSUCHEN";
+        
+        var rank = "Panik-Zone";
+        var color = "#e74c3c";
+        if (squeezeSeconds >= 15) { rank = "Stollen-Routine"; color = "#f1c40f"; }
+        if (squeezeSeconds >= 30) { rank = "Squeeze-Master"; color = "#2ecc71"; checkGamification("breath"); } // Trigger Badge for > 30s
+        
+        uiContainer.innerHTML = "<div style='text-align:center; margin-top:20px;'><h3 style='color:" + color + "; margin:0;'>" + rank + "</h3><p style='font-size:40px; font-weight:bold; color:#fff; margin:10px 0;'>" + squeezeSeconds + "s</p><p style='font-size:12px; color:#aaa;'>mit komplett leerer Lunge.</p></div>";
+    }
 

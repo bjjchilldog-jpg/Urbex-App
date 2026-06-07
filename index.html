@@ -198,13 +198,58 @@
     <div id="view-breath" class="view">
         <h2>MENTALER FOKUS</h2>
         <div class="step step-blue" style="margin-bottom: 20px;">
-            <strong>🔥 PANIK-BREAKER</strong>
+            <strong>🧠 PANIK-BREAKER</strong>
             Bei akuter Platzangst/Unruhe:<br> <b>Scharfes Bonbon oder Kaugummi in den Mund!</b><br><br>
             <i style="font-size: 11px;">Kauen signalisiert "Nahrungsaufnahme" (Parasympathikus) und blockiert biologisch den Fluchtinstinkt.</i>
         </div>
-        <div class="breath-container"><div class="breathing-circle" id="circle"></div><div id="instr">BEREIT</div></div>
-        <button class="btn btn-blue" id="btn-breath" onclick="toggleBreathing()">ATEM-ÜBUNG STARTEN</button>
-        <button class="btn btn-dark" onclick="switchView('view-menu')">ZURÜCK</button>
+
+        <h3 style="margin-top: 20px;">RESILIENZ-TRAINING</h3>
+        <button class="btn btn-dark" onclick="switchView('view-breath-box')" style="padding:20px; font-size:16px;">
+            <span class="icon" style="font-size:24px;">🧘</span><br>
+            <strong>TAKTISCHE ATMUNG</strong><br>
+            <span style="font-size:11px; font-weight:normal;">Puls & Panik beruhigen (4-4-4-4)</span>
+        </button>
+
+        <button class="btn btn-red" onclick="switchView('view-breath-squeeze')" style="padding:20px; font-size:16px; margin-top:10px;">
+            <span class="icon" style="font-size:24px;">🗜️</span><br>
+            <strong>SQUEEZE-TRAINING</strong><br>
+            <span style="font-size:11px; font-weight:normal;">Luft anhalten mit LEERER Lunge</span>
+        </button>
+
+        <button class="btn btn-dark" style="margin-top:20px;" onclick="switchView('view-menu')">ZURÜCK</button>
+    </div>
+
+    <!-- Taktische Atmung View -->
+    <div id="view-breath-box" class="view">
+        <h2>TAKTISCHE ATMUNG</h2>
+        <p style="font-size:12px; color:#aaa; margin-bottom:20px;">4 Sekunden Einatmen, Halten, Ausatmen, Halten. Dies simuliert Kontrolle und blockiert Panik.<br>Ziel: 2 Minuten.</p>
+        
+        <div id="breathUI_box" style="min-height:250px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div class="breathing-pacer" id="pacerCircle_box" style="display:none;">BEREIT</div>
+        </div>
+
+        <button class="btn btn-blue" id="btnStartBox" style="width:100%; padding:15px; margin-top:20px;" onclick="runBoxBreathing()">▶️ 2 MINUTEN STARTEN</button>
+        <button class="btn btn-dark" id="btnAbortBox" style="width:100%; padding:15px; margin-top:10px; display:none;" onclick="abortBoxBreathing()">❌ ABBRECHEN</button>
+        <button class="btn btn-dark" style="margin-top:30px;" onclick="switchView('view-breath')">ZURÜCK</button>
+    </div>
+
+    <!-- Squeeze Training View -->
+    <div id="view-breath-squeeze" class="view">
+        <h2>SQUEEZE-TRAINING</h2>
+        <p style="font-size:12px; color:#aaa; margin-bottom:20px;">Für extreme Engpässe: Lunge komplett entleeren (um schmaler zu werden) und dann OHNE Luft kriechen.</p>
+
+        <div id="breathUI_squeeze" style="min-height:250px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <h4 style="color:#e74c3c; margin-bottom:10px;">ANLEITUNG:</h4>
+            <ul style="text-align:left; font-size:13px; color:#ccc; padding-left:20px;">
+                <li>Tief einatmen.</li>
+                <li>Komplett ausatmen (Lunge 100% leeren!).</li>
+                <li>Start drücken und Luft anhalten.</li>
+            </ul>
+        </div>
+
+        <button class="btn btn-red" id="btnStartSqueeze" style="width:100%; padding:20px; font-size:18px; margin-top:20px; background:#e74c3c; border:none;" onclick="runSqueezeTraining()">⏱️ LUNGE IST LEER - START!</button>
+        <button class="btn btn-blue" id="btnStopSqueeze" style="width:100%; padding:20px; font-size:18px; margin-top:20px; display:none; background:#3498db; border:none;" onclick="stopSqueezeTraining()">💨 ATMEN (STOPP)</button>
+        <button class="btn btn-dark" id="btnBackSqueeze" style="margin-top:30px;" onclick="switchView('view-breath')">ZURÜCK</button>
     </div>
 
     <div id="view-trauma" class="view">
@@ -240,6 +285,7 @@ if ("serviceWorker" in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
